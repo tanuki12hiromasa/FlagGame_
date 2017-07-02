@@ -34,10 +34,13 @@ void Game::run(char _mode) {
 		break;
 	}
 	metronome.set_tempo(bpm,BEAT);
-	const Sound intro(L"midi/intro.mp3");
-	intro.setSpeed((double)bpm/120);
+	const Sound sound_intro(L"midi/intro.mp3");
+	const Sound sound_loop(L"midi/loop.mp3");
+	const Sound sound_correct(L"midi/correct.mp3");
+	const Sound sound_wrong(L"midi/wrong.mp3");
+	sound_intro.setSpeed((double)bpm/120);
 	metronome.start();
-	intro.play();
+	sound_intro.play();
 	while(System::Update()) {
 		current=metronome.get_current();
 		int ber_current = metronome.get_ber_current();
@@ -52,26 +55,26 @@ void Game::run(char _mode) {
 		}
 	}
 	answer.quiz(&command);quiz_count=1;prev=0;
-	Midi::Close();
-	Midi::Open(L"midi/loop2.mid");
-	Midi::SetTempo((double)bpm / 120);
-	Midi::Play();
+	sound_loop.setSpeed((double)bpm/120);
+	sound_loop.setLoop(true);
+	sound_loop.play();
 	while(System::Update() && game_continue) {						//ループ開始点
 		current=metronome.get_current();
 		switch((int)current) {
 		case 0:
 			if(quiz_count > score_n + 3) {
-				game_continue=false;continue;
+				game_continue=false;
+				sound_loop.stop();
+				continue;
 			}
 			if(prev == 3) {
 				if(player == answer) {
 					if(mode=='l') metronome.set_tempo(++bpm,BEAT);
+					sound_loop.setSpeed((double)bpm / 120);
 				}
 				else player=answer;
 				answer.quiz(&command);quiz_count++;
-				Midi::Stop();
-				Midi::SetTempo((double)bpm / 120);
-				Midi::Play();
+				sound_loop.setPosSec(0.0);
 			}
 		default:
 			if(update(&player))
@@ -83,9 +86,13 @@ void Game::run(char _mode) {
 					score_total+=score;
 					score_n++;
 					command.color='c';
+					sound_correct.setSpeed((double)bpm / 120);
+					sound_correct.play();
 				}
 				else{
 					command.color='n';
+					sound_wrong.setSpeed((double)bpm / 120);
+					sound_wrong.play();
 				}
 			}
 			break;

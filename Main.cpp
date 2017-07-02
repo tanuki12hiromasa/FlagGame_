@@ -4,11 +4,13 @@
 void Main()
 {
 	const Font font(30);
-	Game game;char mode='g';
+	Game game;char mode='m';
 	while (System::Update())
 	{
 		switch(mode){
 		case 'm':
+			font(L"<操作方法>\n白旗:A&Z\n赤旗:K&M\n\nStart to Key:K").drawCenter(100);
+			if(Input::KeyK.clicked)mode='g';
 			break;
 		case 'g':
 			game.run('l');mode='e';break;
