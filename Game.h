@@ -25,5 +25,6 @@ private:
     const int tempo_easy = 90;
     const int tempo_normal = 120;
     const int tempo_difficult = 150;
+	const int del_tempo_endless = 2;
 };
 

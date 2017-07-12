@@ -34,10 +34,10 @@ void Game::run(char _mode) {
 		break;
 	}
 	metronome.set_tempo(bpm,BEAT);
-	const Sound sound_intro(L"midi/intro.mp3");
-	const Sound sound_loop(L"midi/loop.mp3");
-	const Sound sound_correct(L"midi/correct.mp3");
-	const Sound sound_wrong(L"midi/wrong.mp3");
+	const Sound sound_intro(L"intro.mp3");
+	const Sound sound_loop(L"loop.mp3");
+	const Sound sound_correct(L"correct.mp3");
+	const Sound sound_wrong(L"wrong.mp3");
 	sound_intro.setSpeed((double)bpm/120);
 	metronome.start();
 	sound_intro.play();
@@ -69,7 +69,8 @@ void Game::run(char _mode) {
 			}
 			if(prev == 3) {
 				if(player == answer) {
-					if(mode=='l') metronome.set_tempo(++bpm,BEAT);
+					bpm += del_tempo_endless;
+					if(mode=='l') metronome.set_tempo(bpm,BEAT);
 					sound_loop.setSpeed((double)bpm / 120);
 				}
 				else player=answer;
